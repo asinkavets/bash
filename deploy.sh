@@ -16,14 +16,14 @@ params=$1
 source $params
 
   #3 building an array of ec2 instances, members of ELB
-EC2_LIST="$(aws elb describe-load-balancers --load-balancer-names $ELB_NAME --query LoadBalancerDescriptions[].Instances[].InstanceId --output text)"
-EC2_LIST=($EC2_LIST)
+ec2_list="$(aws elb describe-load-balancers --load-balancer-names $elb_name --query LoadBalancerDescriptions[].Instances[].InstanceId --output text)"
+ec2_list=($ec2_list)
 
   #4 'for' loop to process within each of EC2 instances in ELB
-for ec2 in "${EC2_LIST[@]}"; do
+for ec2 in "${ec2_list[@]}"; do
   #4.1 Printing instance ID
   echo "Starting work with instance: $ec2"
   #4.2 Checking EC2 instance initial status in ELB service and printing it out
-  ec2_status="$(aws elb describe-instance-health --load-balancer-name $ELB_NAME --instances $ec2 --query 'InstanceStates[*].[State]' --output text)"
+  ec2_status="$(aws elb describe-instance-health --load-balancer-name $elb_name --instances $ec2 --query 'InstanceStates[*].[State]' --output text)"
   echo "  -> initial item $ec2 ELB status: $ec2_status";
 done
