@@ -1,0 +1,12 @@
+  # please put here your AWS Elastic Loadbalancer name
+elb_name=""
+  # please put here username for ec2 instance
+ec2_username="bitnami"
+  # please put here your artifact name
+art_name="sample.war"
+  # please put here URL for artifact downloading
+art_source="URL/$art_name"
+  # please put here folder (full path) for storing artifacts
+art_store="/opt/bitnami/apache-tomcat/artifacts"
+  # please put here folder (full path) where artifact should be extracted in application
+art_dest="/opt/bitnami/apache-tomcat/webapps/ROOT"
