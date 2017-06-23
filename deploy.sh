@@ -44,21 +44,21 @@ for ec2 in "${ec2_list[@]}"; do
   ec2_ip="$(aws ec2 describe-instances --instance-ids $ec2 --query 'Reservations[*].Instances[*].PublicDnsName' --output text)"
   #4.5 Connecting by ssh and deploying application
   ssh -o StrictHostKeyChecking=no -l $ec2_username -t $ec2_ip "
-      # stop Tomcat Server
+      #4.5.1 Stop Tomcat Server
     echo ''
     echo '[STEP]: Stopping Tomcat Server'
     sudo /opt/bitnami/ctlscript.sh stop
-      # wget war file and put it in war's store, if art_store doesn't exist, create it
+      #4.5.2 Wget war file and put it in war's store, if art_store doesn't exist, create it
     echo ''
     echo '[STEP]: Downloading artifact'
     echo ''
     sudo wget -O $art_store/$art_name $art_source || (sudo mkdir $art_store && sudo wget -O $art_store/$art_name $art_source)
-      # cleanuping site ROOT folder and extracting new artifact in it
+      # 4.5.3 Cleanuping site ROOT folder and extracting new artifact in it
     echo ''
     echo '[STEP]: Extracting new artifact'
     echo ''
     (sudo rm -r $art_dest/* && sudo unzip $art_store/$art_name -d $art_dest) || (sudo unzip -o $art_store/$art_name -d $art_dest)
-        # start Tomcat
+      # 4.5.4 Start Tomcat
     echo ''
     echo '[STEP]: Starting Tomcat Server'
     echo ''
