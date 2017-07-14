@@ -29,7 +29,9 @@ while [[ ${#ec2_list[@]} == 0 ]]; do
   echo "Err: You have 0 instances inside ELB"
   exit 1
 done
-
+  #3.3 enable 'draining' for ELB to keep already opened connections while instance deregistering from ELB
+aws elb modify-load-balancer-attributes --load-balancer-name $elb_name --load-balancer-attributes "{\"ConnectionDraining\":{\"Enabled\":true,\"Timeout\":300}}"
+  echo "  -> enable ELB draining to keep already opened connections (til 5 min)"
   #4 'for' loop to process within each of EC2 instances in ELB
 for ec2 in "${ec2_list[@]}"; do
   #4.1 Printing instance ID
@@ -84,4 +86,8 @@ for ec2 in "${ec2_list[@]}"; do
   echo ""
   echo "  -> !Application has been successfully deployed to $ec2!"
 done
+
+  #5 disable 'draining' for ELB again
+aws elb modify-load-balancer-attributes --load-balancer-name $elb_name --load-balancer-attributes "{\"ConnectionDraining\":{\"Enabled\":false}}"
+echo "  -> disable ELB draining again"
 exit 0
